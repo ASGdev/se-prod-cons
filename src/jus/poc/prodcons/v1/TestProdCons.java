@@ -24,12 +24,6 @@ public class TestProdCons extends Simulateur{
 				e.printStackTrace();
 			}
 		}
-		try {
-			this.run();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	protected void run() throws Exception{

@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class ProdCons implements Tampon{
 
 	private LinkedList<Message> buffer;
-	private int maxSizeBuffer = 4;
+	private int maxSizeBuffer = 8;
 	
 	public ProdCons() {
 		this.buffer = new LinkedList<Message>() ;
@@ -32,7 +32,7 @@ public class ProdCons implements Tampon{
 	public Message get(_Consommateur arg0) throws Exception, InterruptedException {
 		synchronized (this) {
 			while(buffer.isEmpty()) {
-				System.out.println(arg0.toString() + " wait");
+				//System.out.println(arg0.toString() + " wait");
 				this.wait();
 			}
 			Message tmp = buffer.pop();
@@ -40,7 +40,7 @@ public class ProdCons implements Tampon{
 			for (Message name : buffer) {
 				System.out.println(name);
 			}
-			System.out.println("---End_Buffer:");
+			System.out.println("---End_Buffer:\n");
 			this.notifyAll();
 			return tmp;
 		}
@@ -50,7 +50,7 @@ public class ProdCons implements Tampon{
 	public void put(_Producteur arg0, Message arg1) throws Exception, InterruptedException {
 		synchronized (this) {
 			while(buffer.size() == maxSizeBuffer ) {
-				System.out.println(arg0.toString() + " wait");
+				//System.out.println(arg0.toString() + " wait");
 				this.wait();
 			}
 			buffer.add(arg1);
@@ -58,7 +58,7 @@ public class ProdCons implements Tampon{
 			for (Message name : buffer) {
 				System.out.println(name);
 			}
-			System.out.println("---End_Buffer:");
+			System.out.println("---End_Buffer:\n");
 			this.notifyAll();
 		}
 	}
