@@ -3,7 +3,7 @@ package jus.poc.prodcons.v2;
 import jus.poc.prodcons.ControlException;
 import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons.Simulateur;
-import jus.poc.*;
+import jus.poc.prodcons.v2.*;
 
 
 public class TestProdCons extends Simulateur{
