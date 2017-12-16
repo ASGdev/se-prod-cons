@@ -6,16 +6,17 @@ import jus.poc.prodcons.Message;
 import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons._Consommateur;
 
-public class Consommateur extends Acteur implements _Consommateur, Runnable{
+public class Consommateur extends Acteur implements _Consommateur {
+
 	private int nbMessage = 4;
 	private int idConsommateur;
 	private ProdCons pc;
-	
+
 	protected Consommateur(int type, Observateur observateur, int moyenneTempsDeTraitement,
 			int deviationTempsDeTraitement) throws ControlException {
 		super(Acteur.typeConsommateur, observateur, moyenneTempsDeTraitement, deviationTempsDeTraitement);
 	}
-	
+
 	protected Consommateur(int type, Observateur observateur, int moyenneTempsDeTraitement,
 			int deviationTempsDeTraitement, ProdCons pc, int id) throws ControlException {
 		super(Acteur.typeConsommateur, observateur, moyenneTempsDeTraitement, deviationTempsDeTraitement);
@@ -27,18 +28,18 @@ public class Consommateur extends Acteur implements _Consommateur, Runnable{
 	public int nombreDeMessages() {
 		return nbMessage;
 	}
-	
+
 	public void setProdCons(ProdCons pc) {
 		this.pc = pc;
 	}
-	
-	public void run () {
+
+	public void run() {
 		Message mssg;
-		for(int i = nbMessage ; i > 0; i--) {
+		for (int i = nbMessage; i > 0; i--) {
 			try {
 				mssg = pc.get(this);
-				//String s = "---" + this.toString() + " a reÃ§u le message: " + "\""+mssg+"\"";
-				//System.out.println(s);
+				// String s = "---" + this.toString() + " a reçu le message: " + "\""+mssg+"\"";
+				// System.out.println(s);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -48,9 +49,10 @@ public class Consommateur extends Acteur implements _Consommateur, Runnable{
 			}
 		}
 	}
-	
+
 	public String toString() {
-		String s = "Consommateur numÃ©ro : " + this.idConsommateur +" ";
+		String s = "Consommateur numéro : " + this.idConsommateur + " ";
 		return s;
 	}
+
 }

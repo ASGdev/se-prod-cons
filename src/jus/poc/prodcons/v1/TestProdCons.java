@@ -1,39 +1,115 @@
 package jus.poc.prodcons.v1;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.InvalidPropertiesFormatException;
+import java.util.Map;
+import java.util.Properties;
+
 import jus.poc.prodcons.ControlException;
 import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons.Simulateur;
-import jus.poc.*;
+import jus.poc.prodcons.v1.*;
 
+public class TestProdCons extends Simulateur {
+	// log
+	ArrayList<String> log = new ArrayList<String>();
+	int nbProd = 0;
+	int nbCons = 0;
+	int nbBuffer = 1;
+	int deviationTempsMoyenProduction;
+	int tempsMoyenConsommation;
+	int deviationTempsMoyenConsommation;
+	int tempsMoyenProduction;
+	int nombreMoyenDeProduction;
+	int deviationNombreMoyenDeProduction;
+	int nombreMoyenNbExemplaire;
+	int deviationNombreMoyenNbExemplaire;
+	private ProdCons pc = new ProdCons();
 
-public class TestProdCons extends Simulateur{
+	private Producteur[] producteurs_holder;
+	private Consommateur[] consommateurs_holder;
 
-	private int nbConsProd = 2;
-	private Consommateur tabCons[] = new Consommateur[nbConsProd];
-	private Producteur tabProd[] = new Producteur[nbConsProd];
-	private ProdCons pc = new ProdCons(10);
-	
-	public TestProdCons(Observateur observateur){
+	public TestProdCons(Observateur observateur) {
 		super(observateur);
-		for(int i = 0 ; i < nbConsProd; i++) {
-			try {
-				tabCons[i]= new Consommateur(2, observateur, 5, 2, pc, i);
-				tabProd[i]= new Producteur(1, observateur, 5, 2, pc, i);
-			} catch (ControlException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+
+		try {
+			this.init();
+
+			System.out.println("===== New TestProd =====");
+			System.out.println("# producteurs : " + nbProd);
+			System.out.println("# consommateurs : " + nbCons);
+
+			producteurs_holder = new Producteur[nbProd];
+			consommateurs_holder = new Consommateur[nbCons];
+
+			for (int i = 0; i < nbCons; i++) {
+				try {
+					consommateurs_holder[i] = new Consommateur(2, observateur, tempsMoyenConsommation,
+							deviationTempsMoyenConsommation, pc, i);
+				} catch (ControlException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
+			for (int i = 0; i < nbProd; i++) {
+				try {
+					producteurs_holder[i] = new Producteur(1, observateur, tempsMoyenProduction,
+							deviationTempsMoyenProduction, pc, i);
+				} catch (ControlException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+		} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException
+				| ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
-	
-	protected void run() throws Exception{
-		for(int i = 0 ; i < nbConsProd; i++) {
-			new Thread(tabCons[i]).start();
-			new Thread(tabProd[i]).start();
+
+	protected void run() throws Exception {
+		for (int i = 0; i < nbCons; i++) {
+			new Thread(consommateurs_holder[i]).start();
+		}
+		for (int i = 0; i < nbProd; i++) {
+			new Thread(producteurs_holder[i]).start();
 		}
 	}
-	
-	public static void main(String[] args){
+
+	public static void main(String[] args)
+			throws ControlException, IllegalArgumentException, IllegalAccessException, NoSuchFieldException,
+			SecurityException, InvalidPropertiesFormatException, IOException, ClassNotFoundException {
 		new TestProdCons(new Observateur()).start();
+
+	}
+
+	/**
+	 * * Retreave the parameters of the application. * @param file the final name of
+	 * the file containing the options.
+	 * 
+	 * @throws SecurityException
+	 * @throws NoSuchFieldException
+	 * @throws IllegalAccessException
+	 * @throws IllegalArgumentException
+	 * @throws IOException
+	 * @throws InvalidPropertiesFormatException
+	 * @throws ClassNotFoundException
+	 */
+	protected void init() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException,
+			SecurityException, InvalidPropertiesFormatException, IOException, ClassNotFoundException {
+		Properties properties = new Properties();
+		InputStream classLoader = getClass().getResourceAsStream("options.txt");
+		properties.loadFromXML(classLoader);
+		String key;
+		int value;
+		Class<?> thisOne = getClass();
+		for (Map.Entry<Object, Object> entry : properties.entrySet()) {
+			key = (String) entry.getKey();
+			value = Integer.parseInt((String) entry.getValue());
+			thisOne.getDeclaredField(key).set(this, value);
+		}
 	}
 }

@@ -5,7 +5,7 @@ import jus.poc.prodcons.ControlException;
 import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons._Producteur;
 
-public class Producteur extends Acteur implements _Producteur, Runnable{
+public class Producteur extends Acteur implements _Producteur, Runnable {
 	private int idProducteur;
 	private int nbMessage = 4;
 	private ProdCons pc;
@@ -14,30 +14,30 @@ public class Producteur extends Acteur implements _Producteur, Runnable{
 			int deviationTempsDeTraitement) throws ControlException {
 		super(Acteur.typeProducteur, observateur, moyenneTempsDeTraitement, deviationTempsDeTraitement);
 	}
-	
+
 	protected Producteur(int type, Observateur observateur, int moyenneTempsDeTraitement,
 			int deviationTempsDeTraitement, ProdCons pc, int id) throws ControlException {
 		super(Acteur.typeProducteur, observateur, moyenneTempsDeTraitement, deviationTempsDeTraitement);
 		this.setProdCons(pc);
 		this.idProducteur = id;
 	}
-	
+
 	@Override
 	public int nombreDeMessages() {
 		return nbMessage;
 	}
-	
+
 	public void setProdCons(ProdCons pc) {
 		this.pc = pc;
 	}
 
 	public void run() {
 		MessageX mssg;
-		for(int i = nbMessage ; i > 0; i--) {
+		for (int i = nbMessage; i > 0; i--) {
 			try {
-				mssg = new MessageX(this.toString() +" | Message numÃ©ro :" + i);
-				//System.out.println(mssg);
-				pc.put(this,mssg);
+				mssg = new MessageX(this.toString() + " | Message numéro :" + i);
+				// System.out.println(mssg);
+				pc.put(this, mssg);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -47,8 +47,9 @@ public class Producteur extends Acteur implements _Producteur, Runnable{
 			}
 		}
 	}
+
 	public String toString() {
-		String s = "Producteur numÃ©ro : " + this.idProducteur;
+		String s = "Producteur numéro : " + this.idProducteur;
 		return s;
 	}
 }
