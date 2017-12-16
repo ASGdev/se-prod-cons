@@ -1,9 +1,10 @@
 package jus.poc.prodcons.v1;
 
 import jus.poc.prodcons.Message;
+import java.util.Date;
 
 public class MessageX implements Message{
-	private String message;
+private String message;
 	
 	public String getMessage() {
 		return message;
