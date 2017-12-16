@@ -10,6 +10,7 @@ import jus.poc.prodcons._Producteur;
 public class ProdCons implements Tampon {
 
 	private LinkedList<Message> buffer;
+	private TestProdCons tpc;
 	private int maxSizeBuffer = 8;
 
 	public ProdCons() {
@@ -21,6 +22,9 @@ public class ProdCons implements Tampon {
 		this.maxSizeBuffer = maxSizeBuffer;
 	}
 
+	public void setTestProdCons(TestProdCons tpc) {
+		this.tpc = tpc;
+	}
 	@Override
 	public int enAttente() {
 		return this.buffer.size();
@@ -31,6 +35,7 @@ public class ProdCons implements Tampon {
 		synchronized (this) {
 			while (buffer.isEmpty()) {
 				// System.out.println(arg0.toString() + " wait");
+				if(this.tpc.getSizeList() == 0) return null;
 				this.wait();
 			}
 			Message tmp = buffer.pop();
