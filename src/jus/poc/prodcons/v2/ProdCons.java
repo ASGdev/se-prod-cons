@@ -42,34 +42,54 @@ public class ProdCons implements Tampon{
 	@Override
 	public Message get(_Consommateur arg0) throws Exception, InterruptedException {
 		
+		System.out.println("||| Not Empty . acquire|||");
 		notEmpty.acquire();
+		System.out.println("||| Mutex . acquire|||");
 		mutex.acquire();
+		System.out.println("||| Acquired|||");
 		
 		// check if buffer is empty, to shut down consumer
-		if(buffer.isEmpty()) {
+		if(buffer.isEmpty() && this.tpc.getSizeList() == 0) {
+			System.out.println("|||" + this.tpc.getSizeList() + "|||");
 			if(this.tpc.getSizeList() == 0) {
+				System.out.println("RIGHT HERE MOTHAFUCKA");
 				mutex.release();
-				notEmpty.release();
 				notFull.release();
-				return null;
+				notEmpty.release();
 			}
+			return null;
+		}
+		else {
+			Message tmp = buffer.pop();
+			System.out.println("---Buffer pop:");
+			for (Message name : buffer) {
+				System.out.println(name);
+			}
+			System.out.println("---End_Buffer:\n");
+			
+			if(buffer.isEmpty() && this.tpc.getSizeList() == 0) {
+				System.out.println("|||" + this.tpc.getSizeList() + "|||");
+				if(this.tpc.getSizeList() == 0) {
+					System.out.println("RIGHT HERE MOTHAFUCKA2");
+					mutex.release();
+					notFull.release();
+					notEmpty.release();
+					return null;
+				}
+				
+			}
+			mutex.release();
+			notFull.release();
+			return tmp;	
 		}
 		
-		Message tmp = buffer.pop();
-		System.out.println("---Buffer pop:");
-		for (Message name : buffer) {
-			System.out.println(name);
-		}
-		System.out.println("---End_Buffer:\n");
-		mutex.release();
-		if(buffer.isEmpty()) {
+		/*if(buffer.isEmpty()) {
+			System.out.println("|||" + this.tpc.getSizeList() + "|||");
 			if(this.tpc.getSizeList() == 0) {
 				notEmpty.release();
 			}
-		}
-		notFull.release();
+		}*/
 		
-		return tmp;	
 	}
 
 	@Override
@@ -85,7 +105,6 @@ public class ProdCons implements Tampon{
 		System.out.println("---End_Buffer:\n");
 		mutex.release();
 		notEmpty.release();
-	
 	}
 
 	@Override

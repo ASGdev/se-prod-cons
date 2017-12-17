@@ -63,6 +63,7 @@ public class TestProdCons extends Simulateur{
 					try {
 						producteurs_holder[i] = new Producteur(1, observateur, tempsMoyenProduction,
 								deviationTempsMoyenProduction, pc, i);
+						
 						list_prod.add(producteurs_holder[i]);
 						producteurs_holder[i].setTestProdCons(this);
 
