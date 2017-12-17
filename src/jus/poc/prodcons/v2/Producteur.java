@@ -54,7 +54,7 @@ public class Producteur extends Acteur implements _Producteur, Runnable{
 			}
 		}
 		tpc.removeProdList(this);
-		System.out.println(this.toString() + " finished producing");
+		System.out.println(this.toString() + " finished producing -> tpc.sizeoflist : " + tpc.getSizeList());
 	}
 	public String toString() {
 		String s = "Producteur numero : " + this.idProducteur;
