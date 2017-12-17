@@ -1,12 +1,12 @@
-package jus.poc.prodcons.v5;
+package jus.poc.prodcons.v6;
 
 import jus.poc.prodcons.Acteur;
 import jus.poc.prodcons.ControlException;
 import jus.poc.prodcons.Message;
 import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons._Consommateur;
-import jus.poc.prodcons.v5.ProdCons;
-import jus.poc.prodcons.v5.TestProdCons;
+import jus.poc.prodcons.v6.ProdCons;
+import jus.poc.prodcons.v6.TestProdCons;
 
 public class Consommateur extends Acteur implements _Consommateur, Runnable{
 	private int nbMessage = 4;
@@ -41,7 +41,7 @@ public class Consommateur extends Acteur implements _Consommateur, Runnable{
 	
 	public void run () {
 		Message mssg;
-		for( ;; ) {
+		for(int i = nbMessage ; i > 0; i--) {
 			try {
 				mssg = pc.get(this);
 				observateur.retraitMessage(this, mssg);

@@ -1,4 +1,4 @@
-package jus.poc.prodcons.v5;
+package jus.poc.prodcons.v6;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,7 +10,7 @@ import java.util.Properties;
 import jus.poc.prodcons.ControlException;
 import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons.Simulateur;
-import jus.poc.prodcons.v5.*;
+import jus.poc.prodcons.v6.*;
 
 
 
@@ -41,8 +41,6 @@ public class TestProdCons extends Simulateur{
 			try {
 				this.init();
 				
-				
-				
 				// init observer
 				try {
 					observateur.init(nbProd, nbCons, nbBuffer) ;
@@ -51,7 +49,7 @@ public class TestProdCons extends Simulateur{
 					e1.printStackTrace();
 				}
 
-				System.out.println("===== New TestProd v5 =====");
+				System.out.println("===== New TestProd v2 =====");
 				System.out.println("# producteurs : " + nbProd);
 				System.out.println("# consommateurs : " + nbCons);
 
@@ -77,7 +75,6 @@ public class TestProdCons extends Simulateur{
 						
 						// update observer
 						observateur.newProducteur(producteurs_holder[i]);
-						list_prod.add(producteurs_holder[i]);
 						
 						producteurs_holder[i].setTestProdCons(this);
 

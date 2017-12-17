@@ -49,15 +49,16 @@ public class ProdCons implements Tampon{
 		
 		try {
 			// check if buffer is empty : to lock condition and to shut down consumer
-			if(buffer.isEmpty()) {
-				notFull.await();
-				if(this.tpc.getSizeList() == 0) return null;
+			while(buffer.isEmpty()) {
+				//if(this.tpc.getSizeList() == 0) return null;
+				notEmpty.await();
+				
 			}
 			
 			tmp = buffer.pop();
 			
 			// buffer can be empty condition
-			notEmpty.signal();
+			notFull.signalAll();
 			
 			System.out.println("---Buffer pop:");
 			for (Message name : buffer) {
@@ -79,7 +80,7 @@ public class ProdCons implements Tampon{
 		try {
 			// buffer is full condition
 			while(buffer.size() == maxSizeBuffer) {
-				notEmpty.await();
+				notFull.await();
 			}
 			//
 			buffer.add(arg1);
