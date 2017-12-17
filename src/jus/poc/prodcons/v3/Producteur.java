@@ -43,11 +43,11 @@ public class Producteur extends Acteur implements _Producteur, Runnable{
 		for(int i = nbMessage ; i > 0; i--) {
 			try {
 				mssg = new MessageX(this.toString() +" | Message numero :" + i);
-				observateur.productionMessage(this, mssg, moyenneTempsDeTraitement);
+				tpc.observateur.productionMessage(this, mssg, moyenneTempsDeTraitement);
 				
 				//System.out.println(mssg);
 				pc.put(this,mssg);
-				observateur.depotMessage(this, mssg); 
+
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -57,6 +57,8 @@ public class Producteur extends Acteur implements _Producteur, Runnable{
 			}
 		}
 		tpc.removeProdList(this);
+		System.out.println(this.toString() + " finished producing -> tpc.sizeoflist : " + tpc.getSizeList());
+
 	}
 	public String toString() {
 		String s = "Producteur numero : " + this.idProducteur;

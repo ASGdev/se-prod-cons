@@ -41,12 +41,17 @@ public class Consommateur extends Acteur implements _Consommateur, Runnable{
 	
 	public void run () {
 		Message mssg;
-		for(int i = nbMessage ; i > 0; i--) {
+		for(;;) {
 			try {
 				mssg = pc.get(this);
-				observateur.retraitMessage(this, mssg);
 				
-				if(mssg == null) break;
+				if(mssg != null) {
+					tpc.observateur.consommationMessage(this, mssg, 0);
+				} else {
+					break;
+				}
+				
+				
 				//String s = "---" + this.toString() + " a reçu le message: " + "\""+mssg+"\"";
 				//System.out.println(s);
 			} catch (InterruptedException e) {
@@ -62,5 +67,9 @@ public class Consommateur extends Acteur implements _Consommateur, Runnable{
 	public String toString() {
 		String s = "Consommateur numéro : " + this.idConsommateur +" ";
 		return s;
+	}
+	
+	public Observateur getObservateur() {
+		return this.observateur;
 	}
 }

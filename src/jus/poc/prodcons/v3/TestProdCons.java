@@ -30,6 +30,7 @@ public class TestProdCons extends Simulateur{
 		int nombreMoyenNbExemplaire;
 		int deviationNombreMoyenNbExemplaire;
 		private ProdCons pc = new ProdCons();
+		Observateur observateur;
 
 		private ArrayList<Producteur> list_prod= new ArrayList<Producteur>(); //used to close conso threads
 		private Producteur[] producteurs_holder;
@@ -37,16 +38,18 @@ public class TestProdCons extends Simulateur{
 
 		public TestProdCons(Observateur observateur) {
 			super(observateur);
+			
+			this.observateur = observateur;
 
+			pc.setTestProdCons(this);
 			try {
 				this.init();
 				
 				// init observer
 				try {
-					observateur.init(nbProd, nbCons, nbBuffer) ;
+					this.observateur.init(nbProd, nbCons, nbBuffer) ;
 				} catch (ControlException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					System.out.println("ERROR INITIALIZING OBSERVER");
 				}
 
 				System.out.println("===== New TestProd v3 =====");
@@ -60,10 +63,10 @@ public class TestProdCons extends Simulateur{
 					try {
 						consommateurs_holder[i] = new Consommateur(2, observateur, tempsMoyenConsommation, deviationTempsMoyenConsommation, pc, i);
 						
-						observateur.newConsommateur(consommateurs_holder[i]);
+						this.observateur.newConsommateur(consommateurs_holder[i]);
 						
 						consommateurs_holder[i].setTestProdCons(this);
-						list_prod.add(producteurs_holder[i]);
+
 						
 					} catch (ControlException e) {
 						// TODO Auto-generated catch block
@@ -76,8 +79,9 @@ public class TestProdCons extends Simulateur{
 								deviationTempsMoyenProduction, pc, i);
 						
 						// update observer
-						observateur.newProducteur(producteurs_holder[i]);
+						this.observateur.newProducteur(producteurs_holder[i]);
 						
+						list_prod.add(producteurs_holder[i]);
 						producteurs_holder[i].setTestProdCons(this);
 
 					} catch (ControlException e) {

@@ -1,7 +1,10 @@
 package jus.poc.prodcons.v3;
 
+import jus.poc.prodcons.Acteur;
 import jus.poc.prodcons.Message;
+import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons.Tampon;
+import jus.poc.prodcons._Acteur;
 import jus.poc.prodcons._Consommateur;
 import jus.poc.prodcons._Producteur;
 import jus.poc.prodcons.v3.TestProdCons;
@@ -42,23 +45,48 @@ public class ProdCons implements Tampon{
 	@Override
 	public Message get(_Consommateur arg0) throws Exception, InterruptedException {
 		
+		System.out.println("||| Not Empty . acquire|||");
 		notEmpty.acquire();
+		System.out.println("||| Mutex . acquire|||");
 		mutex.acquire();
+		System.out.println("||| Acquired|||");
 		
 		// check if buffer is empty, to shut down consumer
-		if(buffer.isEmpty()) {
-			if(this.tpc.getSizeList() == 0) return null;
+		if(buffer.isEmpty() && this.tpc.getSizeList() == 0) {
+			System.out.println("|||" + this.tpc.getSizeList() + "|||");
+			if(this.tpc.getSizeList() == 0) {
+				System.out.println("RIGHT HERE MOTHAFUCKA");
+				mutex.release();
+				notFull.release();
+				notEmpty.release();
+			}
+			return null;
 		}
-		
-		Message tmp = buffer.pop();
-		System.out.println("---Buffer pop:");
-		for (Message name : buffer) {
-			System.out.println(name);
+		else {
+			Message tmp = buffer.pop();
+			tpc.observateur.retraitMessage(arg0, tmp);
+			
+ 			System.out.println("---Buffer pop:");
+			for (Message name : buffer) {
+				System.out.println(name);
+			}
+			System.out.println("---End_Buffer:\n");
+			
+			if(buffer.isEmpty() && this.tpc.getSizeList() == 0) {
+				System.out.println("|||" + this.tpc.getSizeList() + "|||");
+				if(this.tpc.getSizeList() == 0) {
+					System.out.println("RIGHT HERE MOTHAFUCKA2");
+					mutex.release();
+					notFull.release();
+					notEmpty.release();
+					return null;
+				}
+				
+			}
+			mutex.release();
+			notFull.release();
+			return tmp;
 		}
-		System.out.println("---End_Buffer:\n");
-		mutex.release();
-		notFull.release();
-		return tmp;	
 	}
 
 	@Override
@@ -67,6 +95,8 @@ public class ProdCons implements Tampon{
 		notFull.acquire();
 		mutex.acquire();
 		buffer.add(arg1);
+		tpc.observateur.depotMessage(arg0, arg1);
+		
 		System.out.println("---Buffer add:");
 		for (Message name : buffer) {
 			System.out.println(name);
