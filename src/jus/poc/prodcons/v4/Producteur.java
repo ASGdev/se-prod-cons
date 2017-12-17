@@ -4,11 +4,14 @@ import jus.poc.prodcons.Acteur;
 import jus.poc.prodcons.ControlException;
 import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons._Producteur;
+import jus.poc.prodcons.v4.*;
 
 public class Producteur extends Acteur implements _Producteur, Runnable{
 	private int idProducteur;
 	private int nbMessage = 4;
 	private ProdCons pc;
+
+	private TestProdCons tpc;
 
 	protected Producteur(int type, Observateur observateur, int moyenneTempsDeTraitement,
 			int deviationTempsDeTraitement) throws ControlException {
@@ -30,12 +33,16 @@ public class Producteur extends Acteur implements _Producteur, Runnable{
 	public void setProdCons(ProdCons pc) {
 		this.pc = pc;
 	}
+	
+	public void setTestProdCons(TestProdCons tpc) {
+		this.tpc = tpc;
+	}
 
 	public void run() {
 		MessageX mssg;
 		for(int i = nbMessage ; i > 0; i--) {
 			try {
-				mssg = new MessageX(this.toString() +" | Message numéro :" + i);
+				mssg = new MessageX(this.toString() +" | Message numero :" + i);
 				//System.out.println(mssg);
 				pc.put(this,mssg);
 			} catch (InterruptedException e) {
@@ -46,9 +53,10 @@ public class Producteur extends Acteur implements _Producteur, Runnable{
 				e.printStackTrace();
 			}
 		}
+		tpc.removeProdList(this);
 	}
 	public String toString() {
-		String s = "Producteur numéro : " + this.idProducteur;
+		String s = "Producteur numero : " + this.idProducteur;
 		return s;
 	}
 }

@@ -4,9 +4,9 @@ import jus.poc.prodcons.Message;
 import jus.poc.prodcons.Tampon;
 import jus.poc.prodcons._Consommateur;
 import jus.poc.prodcons._Producteur;
+import jus.poc.prodcons.v4.*;
 
 import java.util.LinkedList;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
 
 
@@ -17,15 +17,21 @@ public class ProdCons implements Tampon{
 	private Semaphore notEmpty = new Semaphore(0);
 	private LinkedList<Message> buffer;
 	private int maxSizeBuffer = 8;
+	private TestProdCons tpc;
 	
 	public ProdCons() {
-		this.buffer = new LinkedList<Message>() ;
+		this.buffer = new LinkedList<Message>();
+		this.notFull = new Semaphore(maxSizeBuffer);
 	}
 	
 	public ProdCons(int sizeBuffer) {
 		this.buffer = new LinkedList<Message>() ;
 		this.maxSizeBuffer = sizeBuffer;
 		this.notFull = new Semaphore(sizeBuffer);
+	}
+	
+	public void setTestProdCons(TestProdCons tpc) {
+		this.tpc = tpc;
 	}
 	
 	@Override
@@ -38,6 +44,12 @@ public class ProdCons implements Tampon{
 		
 		notEmpty.acquire();
 		mutex.acquire();
+		
+		// check if buffer is empty, to shut down consumer
+		if(buffer.isEmpty()) {
+			if(this.tpc.getSizeList() == 0) return null;
+		}
+		
 		Message tmp = buffer.pop();
 		System.out.println("---Buffer pop:");
 		for (Message name : buffer) {
