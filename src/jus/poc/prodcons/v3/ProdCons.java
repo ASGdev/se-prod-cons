@@ -1,10 +1,7 @@
 package jus.poc.prodcons.v3;
 
-import jus.poc.prodcons.Acteur;
 import jus.poc.prodcons.Message;
-import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons.Tampon;
-import jus.poc.prodcons._Acteur;
 import jus.poc.prodcons._Consommateur;
 import jus.poc.prodcons._Producteur;
 import jus.poc.prodcons.v3.TestProdCons;
@@ -110,6 +107,10 @@ public class ProdCons implements Tampon{
 	@Override
 	public int taille() {
 		return maxSizeBuffer;
+	}
+	
+	public TestProdCons getTPC() {
+		return this.tpc;
 	}
 	
 }
