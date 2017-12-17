@@ -4,7 +4,7 @@ import jus.poc.prodcons.Message;
 
 public class MessageX implements Message{
 	private String message;
-	private int compteur = 1;
+	private int compteur = 2;
 	
 	public String getMessage() {
 		return message;
