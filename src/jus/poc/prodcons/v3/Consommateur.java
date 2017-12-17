@@ -5,11 +5,14 @@ import jus.poc.prodcons.ControlException;
 import jus.poc.prodcons.Message;
 import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons._Consommateur;
+import jus.poc.prodcons.v3.ProdCons;
+import jus.poc.prodcons.v3.TestProdCons;
 
 public class Consommateur extends Acteur implements _Consommateur, Runnable{
 	private int nbMessage = 4;
 	private int idConsommateur;
 	private ProdCons pc;
+	public TestProdCons tpc;
 	
 	protected Consommateur(int type, Observateur observateur, int moyenneTempsDeTraitement,
 			int deviationTempsDeTraitement) throws ControlException {
@@ -32,11 +35,18 @@ public class Consommateur extends Acteur implements _Consommateur, Runnable{
 		this.pc = pc;
 	}
 	
+	public void setTestProdCons(TestProdCons tpc) {
+		this.tpc = tpc;
+	}
+	
 	public void run () {
 		Message mssg;
 		for(int i = nbMessage ; i > 0; i--) {
 			try {
 				mssg = pc.get(this);
+				observateur.retraitMessage(this, mssg);
+				
+				if(mssg == null) break;
 				//String s = "---" + this.toString() + " a reçu le message: " + "\""+mssg+"\"";
 				//System.out.println(s);
 			} catch (InterruptedException e) {
