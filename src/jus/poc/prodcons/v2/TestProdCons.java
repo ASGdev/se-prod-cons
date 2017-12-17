@@ -37,7 +37,8 @@ public class TestProdCons extends Simulateur{
 
 		public TestProdCons(Observateur observateur) {
 			super(observateur);
-
+			
+			pc.setTestProdCons(this);
 			try {
 				this.init();
 

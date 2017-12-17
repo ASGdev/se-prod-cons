@@ -49,16 +49,39 @@ public class ProdCons implements Tampon{
 		if(buffer.isEmpty()) {
 			if(this.tpc.getSizeList() == 0) return null;
 		}
-		
-		Message tmp = buffer.pop();
-		System.out.println("---Buffer pop:");
-		for (Message name : buffer) {
-			System.out.println(name);
+		MessageX lastmssg = ((Consommateur)arg0).getLastMessage();
+		MessageX check = (MessageX)buffer.peek();
+		System.out.println(lastmssg);
+		System.out.println(check);
+		if(lastmssg.toString() == check.toString()) {//Message deja lu -> ne doit pas ê enlevé
+			System.out.println("---Buffer peek:");
+			for (Message name : buffer) {
+				System.out.println(name);
+			}
+			System.out.println("---End_Buffer:\n");
+			mutex.release();
+			notFull.release();
+			return check;
 		}
-		System.out.println("---End_Buffer:\n");
-		mutex.release();
-		notFull.release();
-		return tmp;	
+		else { //Message non lu, on décrémente le dit message et si il est à une validité de 0, on le remove
+			check.readedOnce();
+			if(check.jobsDone()) {
+				Message tmp = buffer.pop();
+				System.out.println("---Buffer pop:");
+				for (Message name : buffer) {
+					System.out.println(name);
+				}
+				System.out.println("---End_Buffer:\n");
+				mutex.release();
+				notFull.release();
+				return tmp;	
+			}
+			else {//Le message doit encore être lu par au moins un lecteur
+				mutex.release();
+				notFull.release();
+				return check;	
+			}
+		}
 	}
 
 	@Override

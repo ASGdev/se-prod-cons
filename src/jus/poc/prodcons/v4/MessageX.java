@@ -20,6 +20,14 @@ public class MessageX implements Message{
 	}
 	
 	public String toString() {
-		return message;
+		return message + "| Compteur =" +compteur;
+	}
+	
+	public boolean jobsDone() {
+		return compteur == 0;
+	}
+	
+	public void readedOnce() {
+		compteur--;
 	}
 }

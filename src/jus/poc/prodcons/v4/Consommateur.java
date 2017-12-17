@@ -11,6 +11,7 @@ public class Consommateur extends Acteur implements _Consommateur, Runnable{
 	private int nbMessage = 4;
 	private int idConsommateur;
 	private ProdCons pc;
+	private MessageX lastMessage = new MessageX("fake message");
 	public TestProdCons tpc;
 	
 	protected Consommateur(int type, Observateur observateur, int moyenneTempsDeTraitement,
@@ -38,12 +39,18 @@ public class Consommateur extends Acteur implements _Consommateur, Runnable{
 		this.tpc = tpc;
 	}
 	
+	public MessageX getLastMessage() {
+		return lastMessage;
+	}
+	
 	public void run () {
 		Message mssg;
-		for(int i = nbMessage ; i > 0; i--) {
+		for(;;) {
 			try {
 				mssg = pc.get(this);
 				if(mssg == null) break;
+				lastMessage = (MessageX)mssg;
+				
 				//String s = "---" + this.toString() + " a reçu le message: " + "\""+mssg+"\"";
 				//System.out.println(s);
 			} catch (InterruptedException e) {
