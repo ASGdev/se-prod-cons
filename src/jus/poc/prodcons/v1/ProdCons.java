@@ -34,7 +34,6 @@ public class ProdCons implements Tampon {
 	public Message get(_Consommateur arg0) throws Exception, InterruptedException {
 		synchronized (this) {
 			while (buffer.isEmpty()) {
-				//System.out.println(arg0.toString() + " wait");
 				if(this.tpc.getListProdSize() == 0) return null;
 				this.wait();
 			}
@@ -53,7 +52,6 @@ public class ProdCons implements Tampon {
 	public void put(_Producteur arg0, Message arg1) throws Exception, InterruptedException {
 		synchronized (this) {
 			while (buffer.size() == maxSizeBuffer) {
-				// System.out.println(arg0.toString() + " wait");
 				this.wait();
 			}
 			buffer.add(arg1);
