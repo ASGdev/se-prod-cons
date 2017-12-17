@@ -40,9 +40,9 @@ public class Producteur extends Acteur implements _Producteur, Runnable{
 
 	public void run() {
 		MessageX mssg;
-		for(int i = nbMessage ; i > 0; i--) {
+		for( ;; ) {
 			try {
-				mssg = new MessageX(this.toString() +" | Message numero :" + i);
+				mssg = new MessageX(this.toString() +" | Message numero");
 				observateur.productionMessage(this, mssg, moyenneTempsDeTraitement);
 				
 				//System.out.println(mssg);

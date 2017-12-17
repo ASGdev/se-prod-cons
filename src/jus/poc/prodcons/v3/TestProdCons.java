@@ -49,7 +49,7 @@ public class TestProdCons extends Simulateur{
 					e1.printStackTrace();
 				}
 
-				System.out.println("===== New TestProd v2 =====");
+				System.out.println("===== New TestProd v3 =====");
 				System.out.println("# producteurs : " + nbProd);
 				System.out.println("# consommateurs : " + nbCons);
 
@@ -63,6 +63,8 @@ public class TestProdCons extends Simulateur{
 						observateur.newConsommateur(consommateurs_holder[i]);
 						
 						consommateurs_holder[i].setTestProdCons(this);
+						list_prod.add(producteurs_holder[i]);
+						
 					} catch (ControlException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

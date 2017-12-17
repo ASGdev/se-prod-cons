@@ -61,6 +61,7 @@ public class TestProdCons extends Simulateur{
 						consommateurs_holder[i] = new Consommateur(2, observateur, tempsMoyenConsommation, deviationTempsMoyenConsommation, pc, i);
 						
 						observateur.newConsommateur(consommateurs_holder[i]);
+						list_prod.add(producteurs_holder[i]);
 						
 						consommateurs_holder[i].setTestProdCons(this);
 					} catch (ControlException e) {
