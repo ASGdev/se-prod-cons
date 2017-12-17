@@ -51,7 +51,8 @@ public class TestProdCons extends Simulateur{
 
 				for (int i = 0; i < nbCons; i++) {
 					try {
-						consommateurs_holder[i] = new Consommateur(2, observateur, tempsMoyenConsommation, deviationTempsMoyenConsommation, pc, i);
+						consommateurs_holder[i] = new Consommateur(2, observateur, tempsMoyenConsommation,
+								deviationTempsMoyenConsommation, pc, i);
 						consommateurs_holder[i].setTestProdCons(this);
 					} catch (ControlException e) {
 						// TODO Auto-generated catch block
@@ -62,6 +63,7 @@ public class TestProdCons extends Simulateur{
 					try {
 						producteurs_holder[i] = new Producteur(1, observateur, tempsMoyenProduction,
 								deviationTempsMoyenProduction, pc, i);
+						list_prod.add(producteurs_holder[i]);
 						producteurs_holder[i].setTestProdCons(this);
 
 					} catch (ControlException e) {
