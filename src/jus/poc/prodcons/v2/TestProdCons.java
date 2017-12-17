@@ -107,8 +107,8 @@ public class TestProdCons extends Simulateur{
 		protected void init() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException,
 				SecurityException, InvalidPropertiesFormatException, IOException, ClassNotFoundException {
 			Properties properties = new Properties();
-			InputStream classLoader = getClass().getResourceAsStream("options.txt");
-			properties.loadFromXML(classLoader);
+			InputStream optionsfile = ClassLoader.getSystemResourceAsStream("jus/poc/prodcons/options/options.xml");
+			properties.loadFromXML(optionsfile);
 			String key;
 			int value;
 			Class<?> thisOne = getClass();

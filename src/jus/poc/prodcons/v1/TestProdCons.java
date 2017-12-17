@@ -10,7 +10,7 @@ import java.util.Properties;
 import jus.poc.prodcons.ControlException;
 import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons.Simulateur;
-import jus.poc.prodcons.v1.*;
+import jus.poc.prodcons.options.*;
 
 public class TestProdCons extends Simulateur {
 
@@ -105,8 +105,8 @@ public class TestProdCons extends Simulateur {
 	protected void init() throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException,
 			SecurityException, InvalidPropertiesFormatException, IOException, ClassNotFoundException {
 		Properties properties = new Properties();
-		InputStream classLoader = getClass().getResourceAsStream("options.txt");
-		properties.loadFromXML(classLoader);
+		InputStream optionsfile = ClassLoader.getSystemResourceAsStream("jus/poc/prodcons/options/options.xml");
+		properties.loadFromXML(optionsfile);
 		String key;
 		int value;
 		Class<?> thisOne = getClass();
