@@ -46,7 +46,7 @@ public class Producteur extends Acteur implements _Producteur, Runnable{
 		System.out.println(this.toString());
 		MessageX mssg;
 		for(int i = nbMessage ; i > 0; i--) {
-			random_timegap = random_generator.next() * 1000;
+			random_timegap = random_generator.next() * 100;
 			System.out.println("producteur running with random timegap " + random_timegap);
 			try {
 				mssg = new MessageX(this.toString() +" | Message numero :" + i);

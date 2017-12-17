@@ -46,7 +46,7 @@ public class Consommateur extends Acteur implements _Consommateur, Runnable{
 	public void run () {
 		Message mssg;
 		for(;;) {
-			random_timegap = this.random_generator.next() * 1000;
+			random_timegap = this.random_generator.next() * 100;
 
 			try {
 				mssg = pc.get(this);
