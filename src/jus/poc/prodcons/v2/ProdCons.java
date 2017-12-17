@@ -42,12 +42,23 @@ public class ProdCons implements Tampon{
 	@Override
 	public Message get(_Consommateur arg0) throws Exception, InterruptedException {
 		
+		System.out.println("||| Not Empty . acquire|||");
 		notEmpty.acquire();
+		System.out.println("||| Mutex . acquire|||");
 		mutex.acquire();
 		
+		
+		System.out.println("|||" + buffer.isEmpty()+ "|||");
 		// check if buffer is empty, to shut down consumer
 		if(buffer.isEmpty()) {
-			if(this.tpc.getSizeList() == 0) return null;
+			System.out.println("|||" + this.tpc.getSizeList() + "|||");
+			if(this.tpc.getSizeList() == 0) {
+				System.out.println("list empty");
+				mutex.release();
+				notEmpty.release();
+				notFull.release();
+				return null;
+			}
 		}
 		
 		Message tmp = buffer.pop();

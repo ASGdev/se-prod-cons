@@ -41,7 +41,7 @@ public class Consommateur extends Acteur implements _Consommateur, Runnable{
 	
 	public void run () {
 		Message mssg;
-		for(int i = nbMessage ; i > 0; i--) {
+		for(;;) {
 			try {
 				mssg = pc.get(this);
 				if(mssg == null) break;
@@ -55,6 +55,7 @@ public class Consommateur extends Acteur implements _Consommateur, Runnable{
 				e.printStackTrace();
 			}
 		}
+		System.out.println(this.toString() + " finished reading");
 	}
 	
 	public String toString() {
