@@ -68,14 +68,12 @@ public class ProdCons implements Tampon{
 		notFull.acquire();
 		mutex.acquire();
 		
-		((MessageX) arg1).setPutTimestamp(new Date().getTime());
+		
 		buffer.add(arg1);
+		((MessageX) arg1).setPutTimestamp(new Date().getTime());
 		
 		System.out.println("---Buffer add:");
-		for (Message name : buffer) {
-			System.out.println(name);
-		}
-		System.out.println("---End_Buffer:\n");
+		
 		
 		mutex.release();
 		notEmpty.release();
@@ -85,6 +83,13 @@ public class ProdCons implements Tampon{
 	@Override
 	public int taille() {
 		return maxSizeBuffer;
+	}
+	
+	public void dumpBuffer() {
+		for (Message name : buffer) {
+			System.out.println(name);
+		}
+		
 	}
 	
 }
