@@ -43,12 +43,11 @@ public class Producteur extends Acteur implements _Producteur, Runnable{
 		for(int i = nbMessage ; i > 0; i--) {
 			if(mssg != null) {
 				while(!mssg.jobsDone()) {
-					//System.out.println(this.toString() + " is locked");
+					
 				}
 			}
 			try {
 				mssg = new MessageX(this.toString() +" | Message numero :" + i);
-				//System.out.println(mssg);
 				pc.put(this,mssg);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block

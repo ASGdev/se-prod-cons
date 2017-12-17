@@ -41,17 +41,12 @@ public class ProdCons implements Tampon {
 	@Override
 	public Message get(_Consommateur arg0) throws Exception, InterruptedException {
 
-		// System.out.println("||| Not Empty . acquire|||");
 		notEmpty.acquire();
-		// System.out.println("||| Mutex . acquire|||");
 		mutex.acquire();
-		// System.out.println("||| Acquired|||");
 
 		// check if buffer is empty, to shut down consumer
 		if (buffer.isEmpty() && this.tpc.getSizeList() == 0) {
-			System.out.println("|||" + this.tpc.getSizeList() + "|||");
 			if (this.tpc.getSizeList() == 0) {
-				System.out.println("RIGHT HERE MOTHAFUCKA");
 				mutex.release();
 				notFull.release();
 				notEmpty.release();
@@ -65,9 +60,6 @@ public class ProdCons implements Tampon {
 			} else {
 				MessageX lastmssg = ((Consommateur) arg0).getLastMessage();
 				MessageX check = (MessageX) buffer.peek();
-
-				System.out.println("last message : " + lastmssg);
-				System.out.println("check message : " + check);
 
 				if (lastmssg.toString() == check.toString()) {// Message deja lu -> ne doit pas ê enlevé
 					System.out.println("---Buffer peek:");
@@ -90,9 +82,7 @@ public class ProdCons implements Tampon {
 						System.out.println("---End_Buffer:\n");
 
 						if (buffer.isEmpty() && this.tpc.getSizeList() == 0) {
-							System.out.println("|||" + this.tpc.getSizeList() + "|||");
-							if (this.tpc.getSizeList() == 0) {
-								System.out.println("RIGHT HERE MOTHAFUCKA2");
+							if (this.tpc.getSizeList() == 0) {								
 								mutex.release();
 								notEmpty.release();
 								return null;
@@ -104,14 +94,12 @@ public class ProdCons implements Tampon {
 							return popped;
 						} else {
 							mutex.release();
-							//notFull.release();
 							notEmpty.release();
 							return popped;
 						}
 
 					} else {// Le message doit encore être lu par au moins un lecteur
 						mutex.release();
-						//notFull.release();
 						notEmpty.release();
 						return check;
 					}
