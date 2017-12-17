@@ -29,13 +29,13 @@ public class TestProdCons extends Simulateur {
 	int deviationNombreMoyenNbExemplaire;
 	private ProdCons pc = new ProdCons();
 
-	private ArrayList<Producteur> list_prod = new ArrayList<Producteur>(); // used to close conso threads
+	private int list_prod= 0; //used to close conso threads
 	private Producteur[] producteurs_holder;
 	private Consommateur[] consommateurs_holder;
 
 	public TestProdCons(Observateur observateur) {
 		super(observateur);
-
+		pc.setTestProdCons(this);
 		try {
 			this.init();
 
@@ -61,7 +61,7 @@ public class TestProdCons extends Simulateur {
 					producteurs_holder[i] = new Producteur(1, observateur, tempsMoyenProduction,
 							deviationTempsMoyenProduction, pc, i);
 					producteurs_holder[i].setTestProdCons(this);
-
+					list_prod++;
 				} catch (ControlException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -118,15 +118,13 @@ public class TestProdCons extends Simulateur {
 		}
 	}
 
-	/* Used to remove the Producteur from the list */
-	public void removeProdList(Producteur prod) {
-		list_prod.remove(prod);
+	/*Used to remove the prod from the list*/
+	public void decreaseProdList() {
+		list_prod--;
 	}
-
-	/* Used by the Consommateur to close themself */
+	
+	/*Used by the Consommateur to close themself*/
 	public int getSizeList() {
-		return list_prod.size();
+		return list_prod;
 	}
-	
-	
 }

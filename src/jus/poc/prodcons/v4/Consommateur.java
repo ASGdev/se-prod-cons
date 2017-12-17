@@ -50,7 +50,6 @@ public class Consommateur extends Acteur implements _Consommateur, Runnable{
 				mssg = pc.get(this);
 				if(mssg == null) break;
 				lastMessage = (MessageX)mssg;
-				
 				//String s = "---" + this.toString() + " a reçu le message: " + "\""+mssg+"\"";
 				//System.out.println(s);
 			} catch (InterruptedException e) {
@@ -61,6 +60,7 @@ public class Consommateur extends Acteur implements _Consommateur, Runnable{
 				e.printStackTrace();
 			}
 		}
+		System.out.println(this.toString() + " finished reading");
 	}
 	
 	public String toString() {
