@@ -41,7 +41,7 @@ public class Producteur extends Acteur implements _Producteur, Runnable {
 		MessageX mssg;
 		for (int i = nbMessage; i > 0; i--) {
 			try {
-				mssg = new MessageX(this.toString() + " | Message num�ro :" + i);
+				mssg = new MessageX(this.toString() + " | Message numero :" + i);
 				// System.out.println(mssg);
 				pc.put(this, mssg);
 			} catch (InterruptedException e) {
@@ -56,7 +56,7 @@ public class Producteur extends Acteur implements _Producteur, Runnable {
 	}
 
 	public String toString() {
-		String s = "Producteur num�ro : " + this.idProducteur;
+		String s = "Producteur numero : " + this.idProducteur;
 		return s;
 	}
 }

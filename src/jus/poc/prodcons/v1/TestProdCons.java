@@ -13,8 +13,7 @@ import jus.poc.prodcons.Simulateur;
 import jus.poc.prodcons.v1.*;
 
 public class TestProdCons extends Simulateur {
-	// log
-	ArrayList<String> log = new ArrayList<String>();
+
 	int nbProd = 0;
 	int nbCons = 0;
 	int nbBuffer = 1;
