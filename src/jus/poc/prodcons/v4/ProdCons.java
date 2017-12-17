@@ -9,8 +9,7 @@ import jus.poc.prodcons.v4.*;
 import java.util.LinkedList;
 import java.util.concurrent.Semaphore;
 
-
-public class ProdCons implements Tampon{
+public class ProdCons implements Tampon {
 
 	private Semaphore mutex = new Semaphore(1);
 	private Semaphore notFull;
@@ -18,22 +17,22 @@ public class ProdCons implements Tampon{
 	private LinkedList<Message> buffer;
 	private int maxSizeBuffer = 8;
 	private TestProdCons tpc;
-	
+
 	public ProdCons() {
 		this.buffer = new LinkedList<Message>();
 		this.notFull = new Semaphore(maxSizeBuffer);
 	}
-	
+
 	public ProdCons(int sizeBuffer) {
-		this.buffer = new LinkedList<Message>() ;
+		this.buffer = new LinkedList<Message>();
 		this.maxSizeBuffer = sizeBuffer;
 		this.notFull = new Semaphore(sizeBuffer);
 	}
-	
+
 	public void setTestProdCons(TestProdCons tpc) {
 		this.tpc = tpc;
 	}
-	
+
 	@Override
 	public int enAttente() {
 		return this.buffer.size();
@@ -41,52 +40,90 @@ public class ProdCons implements Tampon{
 
 	@Override
 	public Message get(_Consommateur arg0) throws Exception, InterruptedException {
-		
+
+		// System.out.println("||| Not Empty . acquire|||");
 		notEmpty.acquire();
+		// System.out.println("||| Mutex . acquire|||");
 		mutex.acquire();
-		
+		// System.out.println("||| Acquired|||");
+
 		// check if buffer is empty, to shut down consumer
-		if(buffer.isEmpty()) {
-			if(this.tpc.getSizeList() == 0) return null;
-		}
-		MessageX lastmssg = ((Consommateur)arg0).getLastMessage();
-		MessageX check = (MessageX)buffer.peek();
-		System.out.println(lastmssg);
-		System.out.println(check);
-		if(lastmssg.toString() == check.toString()) {//Message deja lu -> ne doit pas ê enlevé
-			System.out.println("---Buffer peek:");
-			for (Message name : buffer) {
-				System.out.println(name);
+		if (buffer.isEmpty() && this.tpc.getSizeList() == 0) {
+			System.out.println("|||" + this.tpc.getSizeList() + "|||");
+			if (this.tpc.getSizeList() == 0) {
+				System.out.println("RIGHT HERE MOTHAFUCKA");
+				mutex.release();
+				notFull.release();
+				notEmpty.release();
 			}
-			System.out.println("---End_Buffer:\n");
-			mutex.release();
-			notFull.release();
-			return check;
-		}
-		else { //Message non lu, on décrémente le dit message et si il est à une validité de 0, on le remove
-			check.readedOnce();
-			if(check.jobsDone()) {
-				Message tmp = buffer.pop();
-				System.out.println("---Buffer pop:");
-				for (Message name : buffer) {
-					System.out.println(name);
+			return null;
+		} else {
+			if (buffer.isEmpty()) {
+				mutex.release();
+				notFull.release();
+				return ((Consommateur) arg0).getLastMessage();
+			} else {
+				MessageX lastmssg = ((Consommateur) arg0).getLastMessage();
+				MessageX check = (MessageX) buffer.peek();
+
+				System.out.println("last message : " + lastmssg);
+				System.out.println("check message : " + check);
+
+				if (lastmssg.toString() == check.toString()) {// Message deja lu -> ne doit pas ê enlevé
+					System.out.println("---Buffer peek:");
+					for (Message name : buffer) {
+						System.out.println(name);
+					}
+					System.out.println("---End_Buffer:\n");
+					mutex.release();
+					notFull.release();
+					notEmpty.release();
+					return check;
+				} else { // Unread message
+					check.readedOnce();
+					if (check.jobsDone()) { // message a été lu par tout les lecteurs voulu
+						Message popped = buffer.pop();
+						System.out.println("---Buffer pop:");
+						for (Message name : buffer) {
+							System.out.println(name);
+						}
+						System.out.println("---End_Buffer:\n");
+
+						if (buffer.isEmpty() && this.tpc.getSizeList() == 0) {
+							System.out.println("|||" + this.tpc.getSizeList() + "|||");
+							if (this.tpc.getSizeList() == 0) {
+								System.out.println("RIGHT HERE MOTHAFUCKA2");
+								mutex.release();
+								notEmpty.release();
+								return null;
+							}
+						}
+						if (buffer.isEmpty()) {
+							mutex.release();
+							notFull.release();
+							return popped;
+						} else {
+							mutex.release();
+							//notFull.release();
+							notEmpty.release();
+							return popped;
+						}
+
+					} else {// Le message doit encore être lu par au moins un lecteur
+						mutex.release();
+						//notFull.release();
+						notEmpty.release();
+						return check;
+					}
 				}
-				System.out.println("---End_Buffer:\n");
-				mutex.release();
-				notFull.release();
-				return tmp;	
-			}
-			else {//Le message doit encore être lu par au moins un lecteur
-				mutex.release();
-				notFull.release();
-				return check;	
+
 			}
 		}
 	}
 
 	@Override
 	public void put(_Producteur arg0, Message arg1) throws Exception, InterruptedException {
-		
+
 		notFull.acquire();
 		mutex.acquire();
 		buffer.add(arg1);
@@ -97,12 +134,12 @@ public class ProdCons implements Tampon{
 		System.out.println("---End_Buffer:\n");
 		mutex.release();
 		notEmpty.release();
-	
+
 	}
 
 	@Override
 	public int taille() {
 		return maxSizeBuffer;
 	}
-	
+
 }

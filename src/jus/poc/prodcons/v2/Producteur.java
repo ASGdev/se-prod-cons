@@ -53,7 +53,7 @@ public class Producteur extends Acteur implements _Producteur, Runnable{
 				e.printStackTrace();
 			}
 		}
-		tpc.removeProdList(this);
+		tpc.decreaseProdList();
 		System.out.println(this.toString() + " finished producing -> tpc.sizeoflist : " + tpc.getSizeList());
 	}
 	public String toString() {

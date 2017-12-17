@@ -82,14 +82,6 @@ public class ProdCons implements Tampon{
 			notFull.release();
 			return tmp;	
 		}
-		
-		/*if(buffer.isEmpty()) {
-			System.out.println("|||" + this.tpc.getSizeList() + "|||");
-			if(this.tpc.getSizeList() == 0) {
-				notEmpty.release();
-			}
-		}*/
-		
 	}
 
 	@Override
