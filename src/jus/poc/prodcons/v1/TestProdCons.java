@@ -2,7 +2,6 @@ package jus.poc.prodcons.v1;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Map;
 import java.util.Properties;

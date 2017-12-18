@@ -20,7 +20,7 @@ public class MessageX implements Message{
 	}
 	
 	public String toString() {
-		return message + "| Compteur =" +compteur;
+		return message;// + "| Compteur =" +compteur;
 	}
 	
 	public boolean jobsDone() {
