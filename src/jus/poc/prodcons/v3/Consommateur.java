@@ -54,7 +54,7 @@ public class Consommateur extends Acteur implements _Consommateur, Runnable{
 				sleep(random_timegap);
 				
 				if(mssg != null) {
-					tpc.observateur.consommationMessage(this, mssg, 0);
+					tpc.observateur.consommationMessage(this, mssg, random_timegap); // to correct please !
 				} else {
 					break;
 				}

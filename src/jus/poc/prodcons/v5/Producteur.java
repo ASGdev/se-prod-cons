@@ -1,6 +1,7 @@
 package jus.poc.prodcons.v5;
 
 import jus.poc.prodcons.Acteur;
+import jus.poc.prodcons.Aleatoire;
 import jus.poc.prodcons.ControlException;
 import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons._Producteur;
@@ -8,9 +9,10 @@ import jus.poc.prodcons.v5.*;
 
 public class Producteur extends Acteur implements _Producteur, Runnable{
 	private int idProducteur;
-	private int nbMessage = 4;
+	private int nbMessage;
+	private Aleatoire random_generator;
+	private int random_timegap; 
 	private ProdCons pc;
-
 	private TestProdCons tpc;
 
 	protected Producteur(int type, Observateur observateur, int moyenneTempsDeTraitement,
@@ -23,6 +25,8 @@ public class Producteur extends Acteur implements _Producteur, Runnable{
 		super(Acteur.typeProducteur, observateur, moyenneTempsDeTraitement, deviationTempsDeTraitement);
 		this.setProdCons(pc);
 		this.idProducteur = id;
+		this.random_generator = new Aleatoire(moyenneTempsDeTraitement, deviationTempsDeTraitement);
+		this.nbMessage = new Aleatoire(pc.getTPC().nombreMoyenDeProduction, pc.getTPC().deviationNombreMoyenDeProduction).next();
 	}
 	
 	@Override
@@ -40,12 +44,15 @@ public class Producteur extends Acteur implements _Producteur, Runnable{
 
 	public void run() {
 		MessageX mssg;
-		for( ;; ) {
+		for(int i = nbMessage ; i > 0; i--) {
+			random_timegap = random_generator.next() * 100;
 			try {
-				mssg = new MessageX(this.toString() +" | Message numero");
-				observateur.productionMessage(this, mssg, moyenneTempsDeTraitement);
+				mssg = new MessageX(this.toString() +" | Message numero :" + i);
+				observateur.productionMessage(this, mssg, random_timegap);
 				
-				//System.out.println(mssg);
+				// wait for randomly-generated message production timespan
+				sleep(random_timegap);
+				
 				pc.put(this,mssg);
 				observateur.depotMessage(this, mssg); 
 			} catch (InterruptedException e) {
@@ -56,10 +63,11 @@ public class Producteur extends Acteur implements _Producteur, Runnable{
 				e.printStackTrace();
 			}
 		}
-		//tpc.removeProdList(this);
+		tpc.decreaseProdList();
+		System.out.println(this.toString() + " finished producing ");
 	}
 	public String toString() {
-		String s = "Producteur numero : " + this.idProducteur;
+		String s = "Producteur numero : " + this.idProducteur + " (nb messages : " + this.nbMessage + " )";
 		return s;
 	}
 }

@@ -1,6 +1,7 @@
 package jus.poc.prodcons.v5;
 
 import jus.poc.prodcons.Acteur;
+import jus.poc.prodcons.Aleatoire;
 import jus.poc.prodcons.ControlException;
 import jus.poc.prodcons.Message;
 import jus.poc.prodcons.Observateur;
@@ -9,10 +10,12 @@ import jus.poc.prodcons.v5.ProdCons;
 import jus.poc.prodcons.v5.TestProdCons;
 
 public class Consommateur extends Acteur implements _Consommateur, Runnable{
-	private int nbMessage = 4;
+	private int nbMessagesConsommes = 0;
 	private int idConsommateur;
 	private ProdCons pc;
 	public TestProdCons tpc;
+	private Aleatoire random_generator;
+	private int random_timegap; 
 	
 	protected Consommateur(int type, Observateur observateur, int moyenneTempsDeTraitement,
 			int deviationTempsDeTraitement) throws ControlException {
@@ -24,11 +27,12 @@ public class Consommateur extends Acteur implements _Consommateur, Runnable{
 		super(Acteur.typeConsommateur, observateur, moyenneTempsDeTraitement, deviationTempsDeTraitement);
 		this.setProdCons(pc);
 		this.idConsommateur = id;
+		random_generator = new Aleatoire(moyenneTempsDeTraitement, deviationTempsDeTraitement);
 	}
 
 	@Override
 	public int nombreDeMessages() {
-		return nbMessage;
+		return nbMessagesConsommes;
 	}
 	
 	public void setProdCons(ProdCons pc) {
@@ -42,13 +46,15 @@ public class Consommateur extends Acteur implements _Consommateur, Runnable{
 	public void run () {
 		Message mssg;
 		for( ;; ) {
+			random_timegap = this.random_generator.next() * 100;
+			
 			try {
 				mssg = pc.get(this);
-				observateur.retraitMessage(this, mssg);
+				observateur.consommationMessage(this, mssg, random_timegap);
 				
 				if(mssg == null) break;
-				//String s = "---" + this.toString() + " a reçu le message: " + "\""+mssg+"\"";
-				//System.out.println(s);
+				
+				nbMessagesConsommes++;
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

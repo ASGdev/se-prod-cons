@@ -50,7 +50,7 @@ public class Producteur extends Acteur implements _Producteur, Runnable{
 			System.out.println("producteur running with random timegap " + random_timegap);
 			try {
 				mssg = new MessageX(this.toString() +" | Message numero :" + i);
-				tpc.observateur.productionMessage(this, mssg, moyenneTempsDeTraitement);
+				tpc.observateur.productionMessage(this, mssg, random_timegap);
 				
 				// wait for randomly-generated message production timespan
 				sleep(random_timegap);

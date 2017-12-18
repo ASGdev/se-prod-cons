@@ -7,7 +7,6 @@ import jus.poc.prodcons._Producteur;
 import jus.poc.prodcons.v5.TestProdCons;
 
 import java.util.LinkedList;
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -50,14 +49,16 @@ public class ProdCons implements Tampon{
 		try {
 			// check if buffer is empty : to lock condition and to shut down consumer
 			while(buffer.isEmpty()) {
-				//if(this.tpc.getSizeList() == 0) return null;
+				if(this.tpc.getSizeList() == 0) {
+					// this is the only way found (but not correct) to terminate
+					Thread.currentThread().stop();
+				}
 				notEmpty.await();
-				
 			}
-			
+		
 			tmp = buffer.pop();
 			
-			// buffer can be empty condition
+			// signals producer threads
 			notFull.signalAll();
 			
 			System.out.println("---Buffer pop:");
@@ -85,7 +86,7 @@ public class ProdCons implements Tampon{
 			//
 			buffer.add(arg1);
 			
-			// signal consumer thread (at least one element on buffer)
+			// signals consumer thread (at least one element on buffer)
 			notEmpty.signalAll();
 			
 			System.out.println("---Buffer add:");
@@ -104,6 +105,10 @@ public class ProdCons implements Tampon{
 	@Override
 	public int taille() {
 		return maxSizeBuffer;
+	}
+	
+	public TestProdCons getTPC() {
+		return this.tpc;
 	}
 	
 }
