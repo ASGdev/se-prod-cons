@@ -10,7 +10,6 @@ import java.util.Properties;
 import jus.poc.prodcons.ControlException;
 import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons.Simulateur;
-import jus.poc.prodcons.v4.*;
 
 public class TestProdCons extends Simulateur {
 
@@ -29,7 +28,7 @@ public class TestProdCons extends Simulateur {
 	int deviationNombreMoyenNbExemplaire;
 	private ProdCons pc = new ProdCons();
 
-	private int list_prod= 0; //used to close conso threads
+	private int list_prod = 0; // used to close conso threads
 	private Producteur[] producteurs_holder;
 	private Consommateur[] consommateurs_holder;
 
@@ -118,12 +117,12 @@ public class TestProdCons extends Simulateur {
 		}
 	}
 
-	/*Used to remove the prod from the list*/
+	/* Used to remove the prod from the list */
 	public void decreaseProdList() {
 		list_prod--;
 	}
-	
-	/*Used by the Consommateur to close themself*/
+
+	/* Used by the Consommateur to close themself */
 	public int getSizeList() {
 		return list_prod;
 	}

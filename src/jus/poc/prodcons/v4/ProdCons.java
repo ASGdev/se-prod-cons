@@ -68,7 +68,6 @@ public class ProdCons implements Tampon {
 					}
 					System.out.println("---End_Buffer:\n");
 					mutex.release();
-					notFull.release();
 					notEmpty.release();
 					return check;
 				} else { // Unread message
@@ -128,6 +127,10 @@ public class ProdCons implements Tampon {
 	@Override
 	public int taille() {
 		return maxSizeBuffer;
+	}
+	
+	public TestProdCons getTPC() {
+		return this.tpc;
 	}
 
 }
