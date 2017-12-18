@@ -36,7 +36,7 @@ public class TestProdCons extends Simulateur {
 		try {
 			this.init();
 
-			System.out.println("===== New TestProd =====");
+			System.out.println("===== New TestProd v1 =====");
 			System.out.println("# producteurs : " + nbProd);
 			System.out.println("# consommateurs : " + nbCons);
 

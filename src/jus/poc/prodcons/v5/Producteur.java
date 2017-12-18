@@ -56,7 +56,7 @@ public class Producteur extends Acteur implements _Producteur, Runnable{
 				e.printStackTrace();
 			}
 		}
-		tpc.removeProdList(this);
+		//tpc.removeProdList(this);
 	}
 	public String toString() {
 		String s = "Producteur numero : " + this.idProducteur;
