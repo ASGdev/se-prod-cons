@@ -1,6 +1,7 @@
 package jus.poc.prodcons.v2;
 
 import jus.poc.prodcons.Acteur;
+import jus.poc.prodcons.Aleatoire;
 import jus.poc.prodcons.ControlException;
 import jus.poc.prodcons.Observateur;
 import jus.poc.prodcons._Producteur;
@@ -8,10 +9,12 @@ import jus.poc.prodcons.v2.*;
 
 public class Producteur extends Acteur implements _Producteur, Runnable{
 	private int idProducteur;
-	private int nbMessage = 4;
+	private int nbMessage;
 	private ProdCons pc;
-
+	private Aleatoire random_generator;
+	private int random_timegap; 
 	private TestProdCons tpc;
+
 
 	protected Producteur(int type, Observateur observateur, int moyenneTempsDeTraitement,
 			int deviationTempsDeTraitement) throws ControlException {
@@ -23,6 +26,8 @@ public class Producteur extends Acteur implements _Producteur, Runnable{
 		super(Acteur.typeProducteur, observateur, moyenneTempsDeTraitement, deviationTempsDeTraitement);
 		this.setProdCons(pc);
 		this.idProducteur = id;
+		this.random_generator = new Aleatoire(moyenneTempsDeTraitement, deviationTempsDeTraitement);
+		this.nbMessage = new Aleatoire(pc.getTPC().nombreMoyenDeProduction, pc.getTPC().deviationNombreMoyenDeProduction).next();
 	}
 	
 	@Override
@@ -41,8 +46,13 @@ public class Producteur extends Acteur implements _Producteur, Runnable{
 	public void run() {
 		MessageX mssg;
 		for(int i = nbMessage ; i > 0; i--) {
+			random_timegap = random_generator.next() * 100;
 			try {
 				mssg = new MessageX(this.toString() +" | Message numero :" + i);
+				
+				// wait for randomly-generated message production timespan
+				sleep(random_timegap);
+				
 				pc.put(this,mssg);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block

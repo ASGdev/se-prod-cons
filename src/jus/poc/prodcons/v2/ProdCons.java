@@ -96,4 +96,9 @@ public class ProdCons implements Tampon{
 		return maxSizeBuffer;
 	}
 	
+	public TestProdCons getTPC() {
+		return this.tpc;
+	}
+	
+	
 }
